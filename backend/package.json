@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "nodemon --import ./instrument.mjs src/server.js",
+    "dev": "nodemon --import ./instrument.mjs src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,11 +14,13 @@
   "description": "",
   "dependencies": {
     "@clerk/express": "^1.7.29",
+    "@sentry/node": "^10.10.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "inngest": "^3.40.2",
-    "mongoose": "^8.18.0"
+    "mongoose": "^8.18.0",
+    "stream-chat": "^9.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
