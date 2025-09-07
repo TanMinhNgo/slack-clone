@@ -9,7 +9,7 @@ import {
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from "react-router-dom";
+} from "react-router";
 import { Toaster } from "react-hot-toast";
 import * as Sentry from "@sentry/react";
 
