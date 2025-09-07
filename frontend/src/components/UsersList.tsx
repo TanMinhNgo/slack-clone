@@ -37,7 +37,7 @@ const UsersList = ({ activeChannel }: any) => {
     staleTime: 1000 * 60 * 5, // 5 mins
   });
 
-  const startDirectMessage = async (targetUser) => {
+  const startDirectMessage = async (targetUser: any) => {
     if (!targetUser || !client?.user) return;
 
     try {
