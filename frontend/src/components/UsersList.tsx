@@ -14,13 +14,16 @@ const UsersList = ({ activeChannel }: any) => {
     if (!client?.user) return;
 
     const response = await client.queryUsers(
-      { id: { $ne: client.user.id } },
+      {},
       { name: 1 },
       { limit: 20 }
     );
 
     const usersOnly = response.users.filter(
-      (user) => !user.id.startsWith("recording-")
+      (user) =>
+        client.user &&
+        user.id !== client.user.id &&
+        !user.id.startsWith("recording-")
     );
 
     return usersOnly;
@@ -42,14 +45,14 @@ const UsersList = ({ activeChannel }: any) => {
 
     try {
       const channelId = [client.user.id, targetUser.id]
-        .sort()
+        .sort((a, b) => a.localeCompare(b))
         .join("-")
         .slice(0, 64);
       const channel = client.channel("messaging", channelId, {
         members: [client.user.id, targetUser.id],
       });
       await channel.watch();
-      setSearchParams({ channel: channel.id });
+      setSearchParams({ channel: channel.id ?? "" });
     } catch (error) {
       console.log("Error creating DM", error);
       Sentry.captureException(error, {
@@ -77,11 +80,11 @@ const UsersList = ({ activeChannel }: any) => {
     <div className="team-channel-list__users">
       {users.map((user) => {
         const channelId = [client.user?.id, user.id]
-          .sort()
+          .sort((a, b) => (a ?? "").localeCompare(b ?? ""))
           .join("-")
           .slice(0, 64);
         const channel = client.channel("messaging", channelId, {
-          members: [client.user.id, user.id],
+          members: [client.user?.id, user.id].filter((id): id is string => typeof id === "string"),
         });
         const unreadCount = channel.countUnread();
         const isActive = activeChannel && activeChannel.id === channelId;

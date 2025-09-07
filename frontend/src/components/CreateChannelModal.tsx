@@ -27,12 +27,14 @@ const CreateChannelModal = ({ onClose }: any) => {
 
       try {
         const response = await client.queryUsers(
-          { id: { $ne: client.user.id } },
+          {},
           { name: 1 },
           { limit: 100 }
         );
 
-        const usersOnly = response.users.filter((user) => !user.id.startsWith("recording-"));
+        const usersOnly = response.users
+          .filter((user) => client.user && user.id !== client.user.id)
+          .filter((user) => !user.id.startsWith("recording-"));
 
         setUsers(usersOnly || []);
       } catch (error) {

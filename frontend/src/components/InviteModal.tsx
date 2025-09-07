@@ -5,8 +5,8 @@ import { XIcon } from "lucide-react";
 const InviteModal = ({ channel, onClose }: any) => {
   const { client } = useChatContext();
 
-  const [users, setUsers] = useState([]);
-  const [selectedMembers, setSelectedMembers] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
   const [error, setError] = useState("");
   const [isInviting, setIsInviting] = useState(false);
