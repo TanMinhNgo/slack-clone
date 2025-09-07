@@ -5,6 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import MembersModal from "./MembersModal";
 import PinnedMessagesModal from "./PinnedMessagesModal";
 import InviteModal from "./InviteModal";
+import type { MessageResponse } from "stream-chat";
 
 const CustomChannelHeader = () => {
   const { channel } = useChannelStateContext();
@@ -15,13 +16,13 @@ const CustomChannelHeader = () => {
   const [showInvite, setShowInvite] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [showPinnedMessages, setShowPinnedMessages] = useState(false);
-  const [pinnedMessages, setPinnedMessages] = useState([]);
+  const [pinnedMessages, setPinnedMessages] = useState<MessageResponse[]>([]);
 
   const otherUser = Object.values(channel.state.members).find(
-    (member) => member.user.id !== user.id
+    (member) => user?.id && member.user?.id !== user.id
   );
 
-  const isDM = channel.data?.member_count === 2 && channel.data?.id.includes("user_");
+  const isDM = channel.data?.member_count === 2 && channel.data?.id?.includes("user_");
 
   const handleShowPinned = async () => {
     const channelState = await channel.query();
@@ -42,7 +43,7 @@ const CustomChannelHeader = () => {
     <div className="h-14 border-b border-gray-200 flex items-center px-4 justify-between bg-white">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          {channel.data?.private ? (
+          {channel.data?.type === "private" ? (
             <LockIcon className="size-4 text-[#616061]" />
           ) : (
             <HashIcon className="size-4 text-[#616061]" />
@@ -79,7 +80,7 @@ const CustomChannelHeader = () => {
           <VideoIcon className="size-5 text-[#1264A3]" />
         </button>
 
-        {channel.data?.private && (
+        {channel.data?.type === "private" && (
           <button className="btn btn-primary" onClick={() => setShowInvite(true)}>
             Invite
           </button>
